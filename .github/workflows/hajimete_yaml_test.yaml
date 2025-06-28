@@ -1,0 +1,34 @@
+name: Run Pytest
+
+on:
+  pull_request:
+    branches: ["main"]
+  
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run pytest
+        run: pytest
+
+      - name: Print secrets
+        run: echo "SUPU_API_KEY -> ${{ secrets.SUPU_API_KEY }}"
+
+      - name: Get time
+        id: get_time
+        run: echo "time=$(date)" >> $GITHUB_OUTPUT
+
+      - name: Print github output
+        run: echo "一つ前のstepの出力は${{ steps.get_time.outputs.time }}です"
